@@ -74,15 +74,15 @@ class StoryList {
    */
 
   async addStory(user, {title, author, url}) {
+    const token = localStorage.getItem('token')
     const response = await axios({
       url: `${BASE_URL}/stories`,
       method: "POST",
-      token: user.loginToken,
-      data: {story: {title, author, url}}
+      data: {token, story: {title, author, url}}
     })
     const newStory = new Story(response.data.story);
-    this.stories.unshift(newStory);
-    user.ownStories.unshift(newStory);
+    this.stories.unshift(newStory); //this adds the newStory to the stories array immediately so it is available 
+    user.ownStories.unshift(newStory); //similarly, adds to the ownStories array so it is available immediately. 
     return newStory;
 
     
@@ -205,4 +205,29 @@ class User {
       return null;
     }
   }
+
+  async addFavorite(story){
+    const username = this.username;
+    const token = this.loginToken;
+    let response = await axios ({
+      method: "POST",
+      url: `${BASE_URL}/users/${username}/favorites/${story.storyId}`,
+      data: {"token": token}
+    })
+    this.favorites.unshift(story);
+  }
+
+  async deleteFavorite(story){
+    const username = this.username;
+    const token = this.loginToken;
+    const response = await axios ({
+      method: "DELETE",
+      url: `${BASE_URL}/users/${username}/favorites/${story.storyId}`,
+      data: {"token": token},
+    })
+    console.log(response)
+    this.favorites.splice(story, 1);
+  }
+  
+
 }

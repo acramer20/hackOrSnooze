@@ -50,3 +50,31 @@ function putStoriesOnPage() {
 
   $allStoriesList.show();
 }
+
+function putFavoritesOnPage() {
+  console.debug("putFavoritesOnPage");
+
+  $allStoriesList.empty();
+
+  //looping through all of the favorites and generating HTML for them
+
+  for (let story of currentUser.favorites) {
+    const $story = generateStoryMarkup(story);
+    $allStoriesList.append($story);
+  }
+
+  $allStoriesList.show();
+}
+
+async function collectNewStory(evt){
+  evt.preventDefault();
+  console.debug("collectNewStory");
+  const title = $('#story-title').val();
+  const author = $('#story-author').val();
+  const url = $('#story-url').val();
+  await storyList.addStory(currentUser,
+    {title, author, url});
+}
+
+$("#storyForm").on('submit', collectNewStory);
+

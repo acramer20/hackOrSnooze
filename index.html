@@ -37,12 +37,38 @@
   <div class="navbar-brand">
     <a class="nav-link" href="#" id="nav-all">Hack or Snooze</a>
   </div>
+  <div class="nav-left">
+    <a class="nav-link" href="#" id="storyPost">Post Story</a>
+    <a class="nav-link" href="#" id="favoriteStories">My Favorites</a>
+  </div>
   <div class="nav-right">
     <a class="nav-link" href="#" id="nav-login">login/signup</a>
     <a class="nav-link" href="#" id="nav-user-profile"></a>
     <a class="hidden" id="nav-logout" href="#"><small>(logout)</small></a>
   </div>
 </nav>
+
+<!-- new story post form -->
+<form class="hidden" id="storyForm">
+  <h3>Post a Story</h3>
+  <div class="containerStory">
+    <div class="input-story">
+      <label for="story-title">Title</label>
+      <input type="text" placeholder="Title" id="story-title">
+    </div>
+    <div class="input-story">
+      <label for="story-author">Author</label>
+      <input type="text" placeholder="Author" id="story-author">
+    </div>
+    <div class="input-story">
+      <label for="story-url">Link</label>
+      <input type="text" placeholder="URL" id="story-url">
+    </div>
+    <div class="input-story">
+      <input type="submit" id="submit-btn" value="Post Story">
+    </div>
+  </div>
+</form>
 
 <!-- area for stories (all stories, user stories, favorites) -->
 <section class="stories-container container">
@@ -95,6 +121,8 @@
     <button type="submit">create account</button>
   </form>
 </section>
+
+<!-- User Profile -->
 
 <!-- Library JS & our JS -->
 <script src="https://unpkg.com/jquery"></script>
