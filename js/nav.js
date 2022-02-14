@@ -49,3 +49,5 @@ function showFavorites(evt) {
   putFavoritesOnPage();
 }
 $("#favoriteStories").on("click", showFavorites);
+
+

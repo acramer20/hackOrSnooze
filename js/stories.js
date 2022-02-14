@@ -31,6 +31,7 @@ function generateStoryMarkup(story) {
         <small class="story-hostname">(${hostName})</small>
         <small class="story-author">by ${story.author}</small>
         <small class="story-user">posted by ${story.username}</small>
+        <span class="fav-marker"><i class="far fa-heart"></i></span>
       </li>
     `);
 }
@@ -77,4 +78,15 @@ async function collectNewStory(evt){
 }
 
 $("#storyForm").on('submit', collectNewStory);
+
+function toggleMark() {
+$(".fa-heart").toggle("marked");
+console.log("changed 'marked' class")
+}
+// on the click of the marker, calling to change class. 
+
+$(".container").on("click", function(e){ console.log("clicked:", e)})
+
+console.log("test toggle", $(".fa-heart").classList);
+
 
