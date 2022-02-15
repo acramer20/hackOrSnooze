@@ -215,9 +215,14 @@ class User {
       data: {"token": token}
     })
     this.favorites.unshift(story);
+
   }
 
-  async deleteFavorite(story){
+  async isFavorite(story) {
+    return currentUser.favorites.some(s => (s.storyId === story.storyId));
+  }
+
+  async removeFavorite(story){
     const username = this.username;
     const token = this.loginToken;
     const response = await axios ({
