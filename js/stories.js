@@ -85,9 +85,7 @@ console.log("changed 'marked' class")
 }
 // on the click of the marker, calling to change class. 
 
-$(".container").on("click", function(e){ console.log("clicked:", e)})
-
-console.log("test toggle:", $(".fa-heart").classList);
+$(".fa-heart").on('click', toggleMark);
 
 
 
