@@ -24,7 +24,7 @@ function generateStoryMarkup(story) {
 
   const hostName = story.getHostName();
 
-  const showHeart = Boolean(currentUser);
+  const showMarker = Boolean(currentUser);
   return $(`
       <li id="${story.storyId}">
         <a href="${story.url}" target="a_blank" class="story-link">
@@ -33,7 +33,8 @@ function generateStoryMarkup(story) {
         <small class="story-hostname">(${hostName})</small>
         <small class="story-author">by ${story.author}</small>
         <small class="story-user">posted by ${story.username}</small>
-        ${showHeart ? getHeartHTML(story, currentUser) : ""}
+        ${showMarker ? getHeartHTML(story, currentUser) : ""}
+        ${showMarker ? getTrashHTML(story, currentUser) : ""}
       </li>
     `);
 }
@@ -44,10 +45,18 @@ function generateStoryMarkup(story) {
 
 function getHeartHTML(story, user) {
   const isFavorite = user.isFavorite(story);
-  const heartType = !isFavorite ? "fas" : "far";
+  const heartType = isFavorite ? "fas" : "far";
   return `<span class ="fav-marker">
     <i class="${heartType} fa-heart"></i>
   </span>`
+}
+function getTrashHTML(story, user) {
+  const isOwnStory = user.isOwnStory(story)
+  const trashCan = isOwnStory ? "far fa-trash-alt" : "";
+  return `
+	<span class="trash-can">
+	  <i class="${trashCan}" id="delete-icon"></i>
+	</span>`;
 }
 /** Gets list of stories from server, generates their HTML, and puts on page. */
 
@@ -63,12 +72,13 @@ function putStoriesOnPage() {
   }
 
   $allStoriesList.show();
+  $favoritedStories.hide();
 }
 
 function putFavoritesOnPage() {
   console.debug("putFavoritesOnPage");
 
-  $allStoriesList.empty();
+  // $allStoriesList.empty();
   $favoritedStories.empty();
 
 
@@ -89,8 +99,37 @@ function putFavoritesOnPage() {
   //   $allStoriesList.append($story);
   // }
 
-  $allStoriesList.show();
+  // $allStoriesList.show();
   $favoritedStories.show();
+}
+
+// Making another for my own stories
+
+function putMyStoriesOnPage() {
+  console.debug("putMyStoriesOnPage");
+
+  $myStories.empty();
+
+
+  if (currentUser.ownStories.length === 0) {
+    $myStories.append("<h5>No Stories Posted!</h5>");
+  } else {
+    // loop through all of users favorites and generate HTML for them
+    for (let story of currentUser.ownStories) {
+      const $story = generateStoryMarkup(story);
+      $myStories.append($story);
+    }
+  }
+
+  // looping through all of the favorites and generating HTML for them
+
+  // for (let story of currentUser.favorites) {
+  //   const $story = generateStoryMarkup(story);
+  //   $allStoriesList.append($story);
+  // }
+
+  // $allStoriesList.show();
+  $myStories.show();
 }
 
 async function collectNewStory(evt){
@@ -101,6 +140,7 @@ async function collectNewStory(evt){
   const url = $('#story-url').val();
   await storyList.addStory(currentUser,
     {title, author, url});
+    navAllStories();
 }
 
 $("#storyForm").on('submit', collectNewStory);
@@ -125,11 +165,26 @@ async function toggleFavorites(evt) {
     $tgt.closest("i").toggleClass("fas far");
   }
   console.debug("toggleFavorites")
-  
 }
 // on the click of the marker, calling to change class. 
 
 $(".container").on('click', '.fa-heart',toggleFavorites)
+
+async function deleteThisStory(evt) {
+  console.debug("deleteThisStory", evt)
+  const $tgt = $(evt.target);
+  const $thisStory = $tgt.parent().parent();
+  const $closestLi= $tgt.closest('li');
+  const storyId = $closestLi.attr('id');
+  const story = storyList.stories.find(s => s.storyId === storyId)
+  currentUser.ownStories.splice(story, 1);
+  await storyList.deleteStory(story);
+  $thisStory.remove();
+  storyList = await StoryList.getStories();
+  
+}
+
+$(".container").on('click', '.fa-trash-alt', deleteThisStory);
 //   e.target.classList.toggle("far");
 //   e.target.classList.toggle('fas');
 
@@ -139,5 +194,5 @@ $(".container").on('click', '.fa-heart',toggleFavorites)
 //   }
 // });
 
-//issue I am facing. The hearts are not staying highlighted. How to get them to stay marked and keep the fas class. 
+//issue I am facing. Hearts come on already highlighted when my code makes it so they should not... next issue is I am not able to get them to just stay highlighted once they are favorited. So it makes it confusing if they are favorited or no. code stories.js 47 reporting incorrect feedback after ! and after ! not. 
 

@@ -81,11 +81,23 @@ class StoryList {
       data: {token, story: {title, author, url}}
     })
     const newStory = new Story(response.data.story);
-    this.stories.unshift(newStory); //this adds the newStory to the stories array immediately so it is available 
-    user.ownStories.unshift(newStory); //similarly, adds to the ownStories array so it is available immediately. 
+    this.stories.unshift(newStory);
+    user.ownStories.unshift(newStory); //this adds the newStory to the stories array immediately so it is available 
+    
     return newStory;
+    
+    
 
     
+    // UNIMPLEMENTED: complete this function!
+  }
+  async deleteStory(story) {
+    const token = localStorage.getItem('token')
+    await axios({
+      url: `${BASE_URL}/stories/${story.storyId}`,
+      method: "DELETE",
+      data: {token}
+    })
     // UNIMPLEMENTED: complete this function!
   }
 }
@@ -218,8 +230,11 @@ class User {
 
   }
 
-  async isFavorite(story) {
-    return currentUser.favorites.some(s => (s.storyId === story.storyId));
+  isFavorite(story) {
+    return this.favorites.some(s => (s.storyId === story.storyId));
+  }
+  isOwnStory(story) {
+    return this.ownStories.some(s => (s.storyId === story.storyId));
   }
 
   async removeFavorite(story){

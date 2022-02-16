@@ -10,6 +10,7 @@ function navAllStories(evt) {
   console.debug("navAllStories", evt);
   hidePageComponents();
   putStoriesOnPage();
+  $("#storyForm").hide();
 }
 
 $body.on("click", "#nav-all", navAllStories);
@@ -47,7 +48,16 @@ function showFavorites(evt) {
   console.debug("showFavorites", evt);
   hidePageComponents();
   putFavoritesOnPage();
+  $("#storyForm").hide();
 }
 $("#favoriteStories").on("click", showFavorites);
+
+function showMyStories(evt) {
+  console.debug("showMyStories", evt);
+  hidePageComponents();
+  putMyStoriesOnPage();
+  $("#storyForm").hide();
+}
+$("#myStories").on("click", showMyStories);
 
 
